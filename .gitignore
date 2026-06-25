@@ -1,0 +1,10 @@
+# Compiled CLI binary
+/huego
+
+# Go build/test artifacts
+*.exe
+*.test
+*.out
+
+# OS cruft
+.DS_Store
