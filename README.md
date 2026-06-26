@@ -12,6 +12,17 @@ the native OS BLE stack (CoreBluetooth on macOS).
 
 > Unofficial. Not affiliated with or endorsed by Signify / Philips Hue.
 
+## Pairing
+
+A Hue light only accepts commands from one bonded controller (usually the phone app),
+so a new machine is rejected until it pairs. To pair this machine:
+
+1. In the **Philips Hue Bluetooth** app, go to
+   Settings → Voice Assistants → [any assistant] → "Make visible".
+2. While that's open, run `./huego on`.
+
+The OS stores the bond, so you only do this once per machine.
+
 ## Install
 
 ```sh
@@ -101,17 +112,6 @@ cache:
 
 Each preset can set `brightness` (0-100), and either `warmth` (0-100) or `color`
 (RRGGBB hex). From Go, use `light.ApplyPreset("relax")`.
-
-## One-time pairing: the "Make visible" step
-
-A Hue light only accepts commands from one bonded controller (usually the phone app),
-so a new machine is rejected until it pairs. To pair this machine:
-
-1. In the **Philips Hue Bluetooth** app, go to
-   Settings → Voice Assistants → [any assistant] → "Make visible".
-2. While that's open, run `./huego on`.
-
-The OS stores the bond, so you only do this once per machine.
 
 ## Credits
 
