@@ -1,7 +1,7 @@
 // Command huego controls a Philips Hue light over Bluetooth from the terminal.
 //
-//	huego on | off | brightness 0-100 | warmth 0-100 | color RRGGBB
-//	huego preset NAME | presets | scan   [--name "Office Light"]
+//	huego on | off | brightness 0-100 | warmth 0-100 | color RRGGBB --name NAME
+//	huego preset NAME --name NAME | presets | scan
 //
 // See the huegobt package docs for the one-time "Make visible" pairing step.
 package main
@@ -20,10 +20,8 @@ import (
 	"github.com/kkjdaniel/huegobt"
 )
 
-const defaultName = "Office Light"
-
 func main() {
-	name := flag.String("name", defaultName, "match the light by (partial) name")
+	name := flag.String("name", "", "match the light by (partial, case-insensitive) name (required; see `huego scan`)")
 	flag.Usage = usage
 	flag.Parse()
 
@@ -50,8 +48,12 @@ func main() {
 	}
 }
 
-// withLight connects to the named light, runs action, and reports msg.
+// withLight connects to the named light, runs action, and reports msg. The caller
+// must say which light via --name.
 func withLight(name string, action func(*huegobt.HueLight) error, msg string) {
+	if strings.TrimSpace(name) == "" {
+		fail(fmt.Errorf("--name is required (run `huego scan` to find your light's name)"))
+	}
 	light, err := huegobt.DiscoverCached(name, 0)
 	if err != nil {
 		fail(err)
@@ -205,17 +207,18 @@ func usage() {
 	fmt.Fprintf(os.Stderr, `huego - control a Philips Hue light over Bluetooth
 
 Usage:
-  huego on              [--name NAME]   turn the light on
-  huego off             [--name NAME]   turn the light off
-  huego brightness PCT  [--name NAME]   set brightness, PCT = 0-100
-  huego warmth PCT      [--name NAME]   set white warmth, PCT = 0-100 (0 cool, 100 warm)
-  huego color RRGGBB    [--name NAME]   set color, hex (e.g. ff8800 or #ff8800)
-  huego preset NAME     [--name NAME]   apply a preset (see: huego presets)
-  huego presets                         list available presets
-  huego scan                            list nearby BLE devices
+  huego on              --name NAME   turn the light on
+  huego off             --name NAME   turn the light off
+  huego brightness PCT  --name NAME   set brightness, PCT = 0-100
+  huego warmth PCT      --name NAME   set white warmth, PCT = 0-100 (0 cool, 100 warm)
+  huego color RRGGBB    --name NAME   set color, hex (e.g. ff8800 or #ff8800)
+  huego preset PRESET   --name NAME   apply a preset (see: huego presets)
+  huego presets                       list available presets
+  huego scan                          list nearby BLE devices
 
-Default --name is %q.
-`, defaultName)
+--name selects the light by (partial, case-insensitive) name and is required for
+every command that controls a light. Run "huego scan" to find your light's name.
+`)
 }
 
 func fail(err error) {

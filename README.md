@@ -72,14 +72,16 @@ light, _ := huegobt.DiscoverCached("Office Light", 0)
 ```sh
 go build -o huego ./cmd/huego
 
-./huego on                # defaults to --name "Office Light"
-./huego off
-./huego brightness 30     # percentage, 0-100
-./huego warmth 70         # white temperature, 0-100 (0 cool, 100 warm)
-./huego color ff8800      # RRGGBB hex (with or without leading #)
-./huego on --name Office  # partial, case-insensitive match
-./huego scan              # list nearby BLE devices to find a light's name
+./huego scan                       # list nearby BLE devices to find your light's name
+./huego on --name Office           # partial, case-insensitive match
+./huego off --name Office
+./huego brightness 30 --name Office  # percentage, 0-100
+./huego warmth 70 --name Office      # white temperature, 0-100 (0 cool, 100 warm)
+./huego color ff8800 --name Office   # RRGGBB hex (with or without leading #)
 ```
+
+`--name` is required for any command that controls a light. Run `./huego scan`
+first to find the name, then pass it.
 
 A light shows either a white temperature or an RGB color, not both: `warmth` switches
 it to white and `color` switches it to RGB.
