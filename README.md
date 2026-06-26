@@ -113,6 +113,16 @@ cache:
 Each preset can set `brightness` (0-100), and either `warmth` (0-100) or `color`
 (RRGGBB hex). From Go, use `light.ApplyPreset("relax")`.
 
+## Use it with an AI agent
+
+`huego` is self-documenting, so an AI coding agent can drive your bulb. Paste this:
+
+```text
+I have a CLI called huego that controls a Philips Hue bulb. Run huego help and
+huego scan to learn the commands and find my bulb's name, then pass it with
+--name and control my light when I ask.
+```
+
 ## Credits
 
 The Bluetooth characteristic formats were reverse-engineered by the community:
